@@ -1,2 +1,35 @@
-package com.example.springapi.service;public class User {
+package com.example.springapi.api.model;
+
+import lombok.Getter;
+
+@Getter
+public class User {
+
+    private int id;
+    private String name;
+    private int age;
+    private String email;
+
+    public User(int id, String name, String email, int age) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.email = email;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
 }
