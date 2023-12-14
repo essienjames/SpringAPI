@@ -1,0 +1,8 @@
+﻿Ticker,companyName,price,currency ,stockExchange,type
+OTGLY,CD Projekt SA,7.1,USD,GPW,Leisure
+MSFT,Microsoft Corp,376.64,USD,NASDAQ,Software
+NVDA,NVIDIA Corp,482.27,USD,NASDAQ,Computer Hardware
+GAW,Games Workshop Group PLC,9479.8,GBX,LSE,Recreational Products
+TSLA,Tesla Inc,235.19,USD,NASDAQ,Auto & Truck Manufacturers
+AMZN,Amazon.com Inc,148.71,USD,NASDAQ,Retail
+AAPL,Apple Inc,196.43,USD,NASDAQ,Communications Equipment

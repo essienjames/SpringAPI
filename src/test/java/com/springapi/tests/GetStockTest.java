@@ -1,4 +1,4 @@
-package com.example.springapi.tests;
+package com.springapi.tests;
 
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
@@ -9,23 +9,26 @@ import org.apache.http.client.utils.URIBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class GetUserTest {
+import static com.springapi.common.data.TestUtils.BASE_URI;
 
-    public static final String BASE_URI = "localhost:8080";
+public class GetStockTest {
 
     @Test
-    public void getUserTest() {
+    public void getStockTest() {
+        String stock = "AAPL";
+
         RequestSpecification request = RestAssured.given();
         request
-            .contentType("application/json");
+                .contentType("application/json");
 
         // Build URL to fetch user by id
         URIBuilder endpointUri = new URIBuilder()
                 .setScheme("http")
                 .setHost(BASE_URI)
-                .setPath("/user")
-                .addParameter("id", "1");
+                .setPath("/api/stocks/" + stock);
         String URL = endpointUri.toString();
+
+        System.out.println("URL: " + URL);
 
         // Send GET request to get the test plan
         Response response = request
