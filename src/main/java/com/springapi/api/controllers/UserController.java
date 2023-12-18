@@ -1,18 +1,17 @@
-package com.example.springapi.api.controller;
+package com.springapi.api.controllers;
 
-import com.example.springapi.api.model.User;
-import com.example.springapi.service.UserService;
+import com.springapi.api.models.User;
+import com.springapi.api.common.exceptions.UserNotFoundException;
+import com.springapi.api.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
-
 @RestController
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public UserController(UserService userService) {
@@ -21,11 +20,7 @@ public class UserController {
 
     @GetMapping("/user")
     public User getUser(@RequestParam Integer id) {
-        Optional user = userService.getUser(id);
-        if (user.isPresent()) {
-            return (User) user.get();
-        } else {
-            return null;
-        }
+        return userService.getUser(id)
+                .orElseThrow(() -> new UserNotFoundException("User with id:" + id + " not found"));
     }
 }

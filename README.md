@@ -22,4 +22,4 @@ To run the project, execute the main method from SpringApiApplication.class. Thi
 You can then query the API endpoints using Postman e.g. GET localhost:8080/user?id=5
 
 ## How to run tests
-To run the tests simply pass ` mvn test ` to the terminal, this will run the project and all tests. 
+To run the tests simply pass ` mvn test ` to the terminal, this will run the project and all automation tests. 
