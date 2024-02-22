@@ -2,7 +2,7 @@
 
 ## Overview
 This project is a demo of a Spring API.
-It used Rest Assured for endpoint testing and Lombok for data structures. 
+It uses RestAssured for endpoint testing and Lombok for data structures. 
 
 For the initial iteration data is hardcoded I plan to use a MySQL database to store and retrieve data.
 
