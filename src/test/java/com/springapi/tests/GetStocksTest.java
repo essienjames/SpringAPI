@@ -11,11 +11,11 @@ import org.junit.jupiter.api.Test;
 
 import static com.springapi.common.data.TestUtils.BASE_URI;
 
-public class GetStockTest {
+public class GetStocksTest {
 
     @Test
     public void getStockTest() {
-        String stock = "AAPL";
+        String stock = "AAPL"; // todo replace hard-coded value with a dynamic value
 
         RequestSpecification request = RestAssured.given();
         request
