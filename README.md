@@ -13,7 +13,9 @@ For the initial iteration data is hardcoded I plan to use a MySQL database to st
 ## Built With
 - **Java**
 - **Maven**, for dependency management
+- **Spring Boot**, for the API
 - **RestAssured**, for API testing
+- **Spring Data JPA**, for database access
 - **Lombok**, for data structures
 - **Jackson**, for JSON processing
 
