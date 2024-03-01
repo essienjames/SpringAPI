@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.springapi.common.data.TestUtils.BASE_URI;
 
-public class GetUserTest {
+public class GetUsersTest {
 
     @Test
     public void getUserTest() {
