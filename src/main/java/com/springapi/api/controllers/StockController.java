@@ -20,7 +20,7 @@ public class StockController {
     private StockRepository stockRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(StockController.class);
 
-    @GetMapping("/get-all-stocks")
+    @GetMapping("/get-all")
     public List<Stocks> getAllStocks() {
             LOGGER.info("Fetching all stocks");
             if (stockRepository.findAll().isEmpty()) {
@@ -31,7 +31,7 @@ public class StockController {
         return stockRepository.findAll(); // This will retrieve all entities from the database
     }
 
-    @GetMapping("/{ticker}") // e.g. /api/stocks/AAPL
+    @GetMapping("/{ticker}") // e.g. /stocks/AAPL
     public ResponseEntity<?> getStockDetails(@PathVariable(name = "ticker") String ticker) {
         LOGGER.info("Fetching stock with ticker: {}", ticker);
         if (ticker == null) {
@@ -43,7 +43,7 @@ public class StockController {
                         .orElseThrow(() -> new StockNotFoundException("Stock with ticker:" + ticker + " not found"));
                 LOGGER.info("Stock found with ticker: {}", ticker);
                 return ResponseEntity.ok(stock);
-            } catch (StockNotFoundException ex) {
+            } catch (StockNotFoundException exception) {
                 LOGGER.warn("Stock not found with ticker: {}", ticker);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Stock not found with ticker: " + ticker);
             }

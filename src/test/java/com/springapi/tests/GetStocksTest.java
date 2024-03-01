@@ -25,7 +25,7 @@ public class GetStocksTest {
         URIBuilder endpointUri = new URIBuilder()
                 .setScheme("http")
                 .setHost(BASE_URI)
-                .setPath("/api/stocks/" + stock);
+                .setPath("/stocks/" + stock);
         String URL = endpointUri.toString();
 
         System.out.println("URL: " + URL);

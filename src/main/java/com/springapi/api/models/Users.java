@@ -8,12 +8,14 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
-public class Stocks {
+public class Users {
     @Id
-    private String ticker;
-    private String company;
-    private Integer price;
+//    private int id;
+    private String first_name;
+    private String last_name;
+    private int age;
+    private String mobile;
     private String currency;
-    private String stockExchange;
-    private String type;
+    private int balance;
+    private String email;
 }
