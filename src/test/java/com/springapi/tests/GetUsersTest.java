@@ -11,24 +11,21 @@ import org.junit.jupiter.api.Test;
 
 import static com.springapi.common.data.TestUtils.BASE_URI;
 
-public class GetStockTest {
+public class GetUsersTest {
 
     @Test
-    public void getStockTest() {
-        String stock = "AAPL";
-
+    public void getUserTest() {
         RequestSpecification request = RestAssured.given();
         request
-                .contentType("application/json");
+            .contentType("application/json");
 
         // Build URL to fetch user by id
         URIBuilder endpointUri = new URIBuilder()
                 .setScheme("http")
                 .setHost(BASE_URI)
-                .setPath("/api/stocks/" + stock);
+                .setPath("/user")
+                .addParameter("id", "1");
         String URL = endpointUri.toString();
-
-        System.out.println("URL: " + URL);
 
         // Send GET request to get the test plan
         Response response = request
