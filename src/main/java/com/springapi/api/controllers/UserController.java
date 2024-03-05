@@ -6,6 +6,7 @@ import com.springapi.api.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,12 +18,12 @@ public class UserController {
     private UserRepository userRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
-    @GetMapping("/get-all")
+    @GetMapping()
     public Iterable<Users> getAllUsers() {
         return userRepository.findAll();
     }
 
-    @GetMapping("/id/{id}") //todo id not appearing in data base columns
+    @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable(name = "id") int id) {
         LOGGER.info("Fetching user with id: {}", id);
         if (id == 0) {
@@ -60,10 +61,12 @@ public class UserController {
         }
     }
 
-//    @PostMapping("/add-user")
-//    public Users addUser(@RequestParam String firstName, @RequestParam String lastName, @RequestParam Integer age, @RequestParam String mobile, @RequestParam String currency, @RequestParam Integer salary, @RequestParam String email) {
-//        return userService.addUser(id, firstName, lastName, age, mobile, currency, salary, email);
-//    }
+    @PostMapping("/add")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Users addUser(@RequestBody Users user) {
+        LOGGER.info("Adding new user: {}", user);
+        return userRepository.save(user);
+    }
 
     // todo add update user and delete user methods
 }
