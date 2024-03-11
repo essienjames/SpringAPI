@@ -4,22 +4,29 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.Accessors;
 
+@Getter
 @Entity
 @Data
 @NoArgsConstructor
+@Accessors(chain = true)
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Indicates auto-increment strategy
+    @Setter(AccessLevel.NONE)
     private Long id;
 
-    private String first_name;
-    private String last_name;
-    private int age;
+    private String firstname;
+    private String lastname;
     private String mobile;
-    private String currency;
-    private int balance;
     private String email;
+    private int age;
+
+    @Setter(AccessLevel.NONE)
+    private String currency;
+
+    @Setter(AccessLevel.NONE)
+    private int balance;
 }
