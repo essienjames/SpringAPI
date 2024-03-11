@@ -1,42 +1,71 @@
-//package com.springapi.api.services;
-//
-//import com.springapi.api.models.Users;
-//import org.springframework.stereotype.Service;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//import java.util.Optional;
-//
-//@Service
-//public class UserService {
-//
-//    private final List<Users> usersList = new ArrayList<>();
-//
-//    //todo remove hardcoded data replace with database implementation
-//    public UserService() {
-//        usersList.add(new Users(1,"Gordon","Freeman", 45,"07364736252","USD",70000,"freeman@blackmesa.com"));
-//        usersList.add(new Users(2,"Harry","Potter",36,"07354629182","GBP",55000, "imawizard@hogwarts.com"));
-//        usersList.add(new Users(3,"Roboute","Guilliman",100,"07884957635","GBP",100000,"guilliboy@imperium.com"));
-//        usersList.add(new Users(4,"Master","Chief",32,"07123890947","USD",10000, "john117@unsc.com"));
-//        usersList.add(new Users(5,"Geralt","Rivia",65,"07354625341","PLN",25000, "butcher@blavakin.com"));
-//    }
-//
-//    public Optional<Users> getUser(Integer id) {
-//        return usersList.stream()
-//                .filter(it -> id.equals(it.getId()))
-//                .findFirst();
-//    }
-//
-//    public Users addUser(Integer id, String firstName, String lastName, Integer age, String mobile, String currency, Integer salary, String email) {
-//        Users users = new Users(id, firstName, lastName, age, mobile, currency, salary, email);
-//        usersList.add(users);
-//        return users;
-//    }
-//    /**
-//     * todo addUser method
-//     * add age verification check (18+)
-//     * Check all fields are filled
-//     * firstName and lastName Syntax check: can't be single characters or contain numbers or symbols
-//     */
-//
-//}
+package com.springapi.api.services;
+
+import com.springapi.api.common.exceptions.UserNotFoundException;
+import com.springapi.api.controllers.UserController;
+import com.springapi.api.models.Users;
+import com.springapi.api.repositories.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class UserService {
+    private final UserRepository userRepository;
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public List<Users> findAll() {
+        return userRepository.findAll();
+    }
+
+    public Users findById(int id) {
+        LOGGER.info("Fetching user with id: {}", id);
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User with id:" + id + " not found"));
+    }
+
+    public Users findByEmail(String email) {
+        LOGGER.info("Fetching user with email: {}", email);
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User with email:" + email + " not found"));
+    }
+
+    public Users createUser(Users user) {
+        LOGGER.info("Adding new user: {}", user);
+        return userRepository.save(user);
+    }
+
+    public Users updateUser(int id, Users user) {
+        LOGGER.info("Updating user with id: {}", id);
+        Users existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User with id:" + id + " not found"));
+
+        // Perform validation for age
+        if (user.getAge() < 18) {
+            throw new IllegalArgumentException("You must be 18 or over to use this service.");
+        }
+
+        // Update user details
+        existingUser.setFirstname(user.getFirstname());
+        existingUser.setLastname(user.getLastname());
+        existingUser.setAge(user.getAge());
+        existingUser.setMobile(user.getMobile());
+        existingUser.setEmail(user.getEmail());
+
+        return userRepository.save(existingUser);
+    }
+
+    public Users deleteUser(int id) {
+        LOGGER.info("Deleting user with id: {}", id);
+        Users userToDelete = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User with id:" + id + " not found"));
+
+        userRepository.delete(userToDelete);
+        return userToDelete;
+    }
+}
