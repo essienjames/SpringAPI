@@ -45,20 +45,20 @@ public class UserController {
         return ResponseEntity.ok(userService.createUser(user));
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Object> updateUser(@PathVariable(name = "id") int id, @RequestBody Users user) {
+    @PutMapping("/update/{email}")
+    public ResponseEntity<Object> updateUser(@PathVariable(name = "email") String email, @RequestBody Users user) {
         try {
-            Users updatedUser = userService.updateUser(id, user);
+            Users updatedUser = userService.updateUser(email, user);
             return ResponseEntity.ok(updatedUser);
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Users> deleteUser(@PathVariable(name = "id") int id) {
-        Users deletedUser = userService.deleteUser(id);
-        LOGGER.info("User deleted with id: {}", id);
+    @DeleteMapping("/delete/{email}")
+    public ResponseEntity<Users> deleteUser(@PathVariable(name = "email") String email) {
+        Users deletedUser = userService.deleteUser(email);
+        LOGGER.info("User deleted with id: {}", email);
         return ResponseEntity.ok(deletedUser);
     }
 }
