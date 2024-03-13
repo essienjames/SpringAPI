@@ -35,15 +35,22 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("User with email:" + email + " not found"));
     }
 
+    // todo add validation to ensure no existing user with the same email
     public Users createUser(Users user) {
         LOGGER.info("Adding new user: {}", user);
+        Users existingUser = userRepository.findByEmail(user.getEmail()).orElse(null);
+
+        if (existingUser != null) {
+            throw new IllegalArgumentException("User with email: " + user.getEmail() + " already exists");
+        }
+
         return userRepository.save(user);
     }
 
-    public Users updateUser(int id, Users user) {
-        LOGGER.info("Updating user with id: {}", id);
-        Users existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User with id:" + id + " not found"));
+    public Users updateUser(String email, Users user) {
+        LOGGER.info("Updating user with email: {}", email);
+        Users existingUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User with email:" + email + " not found"));
 
         // Perform validation for age
         if (user.getAge() < 18) {
@@ -60,10 +67,10 @@ public class UserService {
         return userRepository.save(existingUser);
     }
 
-    public Users deleteUser(int id) {
-        LOGGER.info("Deleting user with id: {}", id);
-        Users userToDelete = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User with id:" + id + " not found"));
+    public Users deleteUser(String email) {
+        LOGGER.info("Deleting user with email: {}", email);
+        Users userToDelete = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User with email:" + email + " not found"));
 
         userRepository.delete(userToDelete);
         return userToDelete;
