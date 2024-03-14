@@ -7,6 +7,9 @@ import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+/**
+ * Represents a user entity.
+ */
 @Getter
 @Entity
 @Data

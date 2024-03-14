@@ -5,6 +5,9 @@ import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Represents a stock entity listed on a stock market.
+ */
 @Entity
 @Data
 @NoArgsConstructor
