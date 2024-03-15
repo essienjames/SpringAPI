@@ -1,9 +1,11 @@
 package com.springapi.api.controllers;
 
 import com.springapi.api.models.Stocks;
+import com.springapi.api.common.exceptions.DeleteStockException;
 import com.springapi.api.services.StockService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,10 +40,32 @@ public class StockController {
         return ResponseEntity.ok(stock);
     }
 
+    @PostMapping("/add")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Stocks> addStock(@RequestBody Stocks stock) {
+        LOGGER.info("Stock created: {}", stock);
+        return ResponseEntity.ok(stockService.createStock(stock));
+    }
+
+    @PutMapping("/update/{ticker}")
+    public ResponseEntity<Object> updateStock(@PathVariable(name = "ticker") String ticker, @RequestBody Stocks stock) {
+        try {
+            Stocks updatedStock = stockService.updateStock(ticker, stock);
+            return ResponseEntity.ok(updatedStock);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
+
+    @DeleteMapping("/delete/{ticker}")
+    public ResponseEntity<DeleteStockException> deleteStock(@PathVariable(name = "ticker") String ticker) {
+        Stocks deletedStock = stockService.deleteStock(ticker);
+        LOGGER.info("Stock deleted with ticker: {}", ticker);
+        DeleteStockException response = new DeleteStockException("Stock with ticker " + ticker + " has been deleted", deletedStock);
+        return ResponseEntity.ok(response);
+    }
+
     // todo Other endpoints for:
-    //  add stock,
-    //  update stock,
-    //  delete stock,
     //  historical data (e.g. prices between two dates),
     //  fetch all stocks by stock_exchange/currency/type, etc.
 }
