@@ -33,6 +33,25 @@ public class StockController {
         return stockService.findAll(); // This will retrieve all entities from the database
     }
 
+    //  fetch all stocks by stock_exchange/currency/type, etc.
+    @GetMapping("/stock_exchange/{stockExchange}") // e.g. /stocks/stock_exchange/NYSE
+    public List<Stocks> getStocksByStockExchange(@PathVariable(name = "stockExchange") String stockExchange) {
+        LOGGER.info("Fetching all stocks by stock exchange: {}", stockExchange);
+        return stockService.findByStockExchange(stockExchange);
+    }
+
+    @GetMapping("/currency/{currency}") // e.g. /stocks/currency/USD
+    public List<Stocks> getStocksByCurrency(@PathVariable(name = "currency") String currency) {
+        LOGGER.info("Fetching all stocks by currency: {}", currency);
+        return stockService.findByCurrency(currency);
+    }
+
+    @GetMapping("/type/{type}") // e.g. /stocks/type/Software
+    public List<Stocks> getStocksByType(@PathVariable(name = "type") String type) {
+        LOGGER.info("Fetching all stocks by type: {}", type);
+        return stockService.findByType(type);
+    }
+
     @GetMapping("/{ticker}") // e.g. /stocks/AAPL
     public ResponseEntity<?> getStockDetails(@PathVariable(name = "ticker") String ticker) {
         Stocks stock = stockService.findByTicker(ticker);
@@ -67,5 +86,4 @@ public class StockController {
 
     // todo Other endpoints for:
     //  historical data (e.g. prices between two dates),
-    //  fetch all stocks by stock_exchange/currency/type, etc.
 }
