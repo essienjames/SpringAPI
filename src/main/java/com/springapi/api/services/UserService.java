@@ -35,7 +35,6 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("User with email:" + email + " not found"));
     }
 
-    // todo add validation to ensure no existing user with the same email
     public Users createUser(Users user) {
         LOGGER.info("Adding new user: {}", user);
         Users existingUser = userRepository.findByEmail(user.getEmail()).orElse(null);
