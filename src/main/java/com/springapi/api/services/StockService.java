@@ -26,7 +26,22 @@ public class StockService {
     public Stocks findByTicker(String ticker) {
         LOGGER.info("Fetching stock with ticker: {}", ticker);
         return stockRepository.findByTicker(ticker)
-                .orElseThrow(() -> new StockNotFoundException("Stock with ticker:" + ticker + " not found"));
+                .orElseThrow(() -> new StockNotFoundException("Stock with ticker: " + ticker + " not found"));
+    }
+
+    public List<Stocks> findByStockExchange(String stockExchange) {
+        LOGGER.info("Fetching all stocks by stock exchange: {}", stockExchange);
+        return stockRepository.findByStockExchange(stockExchange);
+    }
+
+    public List<Stocks> findByCurrency(String currency) {
+        LOGGER.info("Fetching all stocks by currency: {}", currency);
+        return stockRepository.findByCurrency(currency);
+    }
+
+    public List<Stocks> findByType(String type) {
+        LOGGER.info("Fetching all stocks by type: {}", type);
+        return stockRepository.findByType(type);
     }
 
     public Stocks createStock(Stocks stock) {
@@ -59,10 +74,6 @@ public class StockService {
         LOGGER.info("Deleting stock with ticker: {}", ticker);
         Stocks existingStock = stockRepository.findByTicker(ticker)
                 .orElseThrow(() -> new StockNotFoundException("Stock with ticker:" + ticker + " not found"));
-
-
-//        DeleteStockResponse response = new DeleteStockResponse("Stock with ticker " + ticker + " has been deleted", deletedStock);
-
         stockRepository.delete(existingStock);
         return existingStock;
     }

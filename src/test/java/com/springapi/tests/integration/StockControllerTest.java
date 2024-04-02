@@ -1,4 +1,4 @@
-package com.springapi.tests.unit;
+package com.springapi.tests.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -12,9 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +30,7 @@ public class StockControllerTest {
     public void shouldReturnAllStocks() {
         // Arrange
         Stocks stock = new Stocks("AAPL", "Apple Inc.", 150, "USD", "NASDAQ", "Technology");
+        System.out.println("Stock: " + stock);
         when(stockService.findAll()).thenReturn(Collections.singletonList(stock));
 
         // Act
