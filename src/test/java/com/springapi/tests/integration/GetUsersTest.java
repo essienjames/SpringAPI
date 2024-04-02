@@ -1,4 +1,4 @@
-package com.springapi.tests;
+package com.springapi.tests.api;
 
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
