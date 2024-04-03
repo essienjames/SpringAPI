@@ -33,7 +33,6 @@ public class StockController {
         return stockService.findAll(); // This will retrieve all entities from the database
     }
 
-    //  fetch all stocks by stock_exchange/currency/type, etc.
     @GetMapping("/stock_exchange/{stockExchange}") // e.g. /stocks/stock_exchange/NYSE
     public List<Stocks> getStocksByStockExchange(@PathVariable(name = "stockExchange") String stockExchange) {
         LOGGER.info("Fetching all stocks by stock exchange: {}", stockExchange);
@@ -55,8 +54,14 @@ public class StockController {
     @GetMapping("/{ticker}") // e.g. /stocks/AAPL
     public ResponseEntity<?> getStockDetails(@PathVariable(name = "ticker") String ticker) {
         Stocks stock = stockService.findByTicker(ticker);
-        LOGGER.info("Stock found with ticker: {}", ticker);
-        return ResponseEntity.ok(stock);
+
+        if (stock != null) {
+            LOGGER.info("Stock found with ticker: {}", ticker);
+            return ResponseEntity.ok(stock);
+        } else {
+            LOGGER.info("Stock with ticker: {}", ticker + " not found");
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/add")
