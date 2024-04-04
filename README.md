@@ -3,14 +3,16 @@
 ## Prerequisites
 - **Java Development Environment**: Java JDK installed.
 - **Postman**: for querying the API endpoints.
+- **Postgresql**: for hosting the database
 
 ## Built With
 - **Java**
 - **Maven**, for dependency management
 - **Spring Boot**, for the API
 - **Postgresql** for the Database
-- **RestAssured**, for API testing
 - **Spring Data JPA**, for database access
+- **JUnit**, for unit and integration testing
+- **RestAssured**, for API testing
 - **Lombok**, for data structures
 - **Jackson**, for JSON processing
 
@@ -19,4 +21,4 @@ To run the project, execute the main method from SpringApiApplication.class. Thi
 You can then query the API endpoints using Postman e.g. GET localhost:8080/users/get-all
 
 ## How to run tests
-To run the tests simply pass ` mvn test ` to the terminal, this will run the project and all automation tests. 
+To run the tests simply pass ` mvn test ` to the terminal, this will run the project and all unit/integration/api tests. 
