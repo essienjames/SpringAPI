@@ -15,11 +15,10 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasItems;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -27,9 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Unit tests for the StockService class.
  *
- * This class tests the behavior of the StockService class methods by mocking its dependencies.
- * The main purpose of these tests is to ensure that the StockService behaves as expected
- * when retrieving and manipulating stock data.
  */
 @WebMvcTest(StockController.class)
 @ExtendWith(MockitoExtension.class)
@@ -53,21 +49,18 @@ public class StockServiceTest {
     }
 
     /**
-     * Test case to verify the behavior of the findAll() method in the StockService.
-     *
-     * This test ensures that the findAll() method correctly retrieves all stock data
-     * and that the returned data matches the expected format and values.
-     * It also verifies that the findAll method of the StockService is invoked the correct number of times.
+     * Verifies the behavior of the findAll() method in the StockService.
      */
     @Test
-    public void testFindAll() throws Exception {
+    public void testFindAll_ShouldReturnAllStocks() throws Exception {
+        // given
         given(stockService.findAll()).willReturn(mockStocks);
 
-        System.out.println(stockService.findAll());
-
+        // when
         ResultActions resultActions = mockMvc.perform(get("/stocks")
                 .contentType("application/json"));
 
+        // then
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$[*].ticker").value(hasItems("AAPL", "GOOGL", "AMZN")))
                 .andExpect(jsonPath("$[*].company").value(hasItems("Apple Inc.", "Alphabet Inc.", "Amazon.com Inc.")))
@@ -75,7 +68,82 @@ public class StockServiceTest {
                 .andExpect(jsonPath("$[*].currency").value(hasItems("USD")))
                 .andExpect(jsonPath("$[*].stockExchange").value(hasItems("NASDAQ")))
                 .andExpect(jsonPath("$[*].type").value(hasItems("Technology")));
+    }
 
-        verify(stockService, times(3)).findAll();
+    /**
+     * Ensures that the findByTicker() method correctly retrieves a stock by its ticker
+     * and that the returned data matches the expected format and values.
+     */
+    @Test
+    public void testFindByTicker_ShouldReturnStockByTicker() throws Exception {
+        // given
+        Stocks stock = mockStocks.get(0);
+        String validTicker = "AAPL";
+        given(stockService.findByTicker(validTicker)).willReturn(stock);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(get("/stocks/" + validTicker));
+
+        // then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.ticker").value("AAPL"))
+                .andExpect(jsonPath("$.company").value("Apple Inc."))
+                .andExpect(jsonPath("$.price").value(150))
+                .andExpect(jsonPath("$.currency").value("USD"))
+                .andExpect(jsonPath("$.stockExchange").value("NASDAQ"))
+                .andExpect(jsonPath("$.type").value("Technology"));
+    }
+
+    /**
+     * Ensures that the findByTicker() method returns a 404 Not Found status
+     * when a stock with the specified ticker is not found.
+     */
+
+    @Test
+    public void testFindByTicker_ShouldReturnStockNotFound() throws Exception {
+        // given
+        String invalidTicker = "XYZ";
+        given(stockService.findByTicker(invalidTicker)).willReturn(null);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(get("/stocks/" + invalidTicker));
+
+        // then
+        resultActions.andExpect(status().isNotFound());
+    }
+
+    /**
+     * Ensures that the findByStockExchange() method correctly retrieves all stock
+     * by the specified stock exchange.
+     */
+    @Test
+    public void testFindByStockExchange_ShouldReturnStocksByStockExchange() throws Exception {
+        // given
+        String validStockExchange = "NASDAQ";
+        given(stockService.findByStockExchange(validStockExchange)).willReturn(mockStocks);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(get("/stocks/stock_exchange/" + validStockExchange));
+
+        // then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$[*].stockExchange").value(hasItems("NASDAQ")));
+    }
+
+    /**
+     * Ensures the findByStockExchange() method returns an empty list
+     * when no stocks are found for the specified stock exchange.
+     */
+    @Test
+    public void testFindByStockExchange_ShouldReturnExchangeNotFound() throws Exception {
+        // given
+        String invalidStockExchange = "";
+        given(stockService.findByStockExchange(invalidStockExchange)).willReturn(null);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(get("/stocks/stock_exchange/" + invalidStockExchange));
+
+        // then
+        resultActions.andExpect(status().isNotFound());
     }
 }

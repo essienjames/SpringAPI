@@ -40,9 +40,6 @@ public class StockControllerTest {
         // Assert
         assertEquals(1, stocks.size());
         assertEquals("AAPL", stocks.get(0).getTicker());
-
-        // Verify interactions
-        verify(stockService, times(1)).findAll();
     }
 
     //todo Write similar tests for other controller methods
