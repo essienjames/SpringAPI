@@ -44,6 +44,9 @@ public class Stocks {
         this.type = type;
     }
 
+    public Stocks(String s) {
+    }
+
     /**
      * Validates the fields of the Stocks instance.
     */

@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -31,7 +33,27 @@ public class StockService {
 
     public List<Stocks> findByStockExchange(String stockExchange) {
         LOGGER.info("Fetching all stocks by stock exchange: {}", stockExchange);
+
+        // Check if the stockExchange code is valid before querying the repository
+        if (!isValidStockExchange(stockExchange)) {
+            throw new StockNotFoundException("Invalid market identifier code: " + stockExchange);
+        }
+
+        // Check if stockExchange is empty
+        if (stockExchange.isEmpty()) {
+            throw new StockNotFoundException("Market identifier code cannot be empty");
+        }
+
         return stockRepository.findByStockExchange(stockExchange);
+    }
+
+    private boolean isValidStockExchange(String stockExchange) {
+        List<String> validMarketIdentifierCodes = Arrays.asList(
+                "NYSE", "NASDAQ", "XAMS", "XBRU", "XPAR", "GPW",
+                "XJPX", "XHKG", "XTSE", "XLON", "XFRA", "XKOS"
+        );
+
+        return validMarketIdentifierCodes.contains(stockExchange);
     }
 
     public List<Stocks> findByCurrency(String currency) {

@@ -11,10 +11,10 @@ public class DataSourceConfig {
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.h2.Driver");
-        dataSource.setUrl("jdbc:h2:mem:testdb");
-        dataSource.setUsername("sa");
-        dataSource.setPassword("password");
+        dataSource.setDriverClassName("org.postgresql.Driver");
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/postgres");
+//        dataSource.setUsername("");
+//        dataSource.setPassword("");
         return dataSource;
     }
 }

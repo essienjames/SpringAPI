@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasItems;
 import static org.mockito.BDDMockito.given;
@@ -48,10 +49,7 @@ public class StockServiceTest {
     }
 
     /**
-     * Test case to verify the behavior of the findAll() method in the StockService.
-     *
-     * This test ensures that the findAll() method correctly retrieves all stock data
-     * and that the returned data matches the expected format and values.
+     * Verifies the behavior of the findAll() method in the StockService.
      */
     @Test
     public void testFindAll_ShouldReturnAllStocks() throws Exception {
@@ -73,19 +71,18 @@ public class StockServiceTest {
     }
 
     /**
-     * Test case to verify the behavior of the findByTicker() method in the StockService.
-     *
-     * This test ensures that the findByTicker() method correctly retrieves a stock by its ticker
+     * Ensures that the findByTicker() method correctly retrieves a stock by its ticker
      * and that the returned data matches the expected format and values.
      */
     @Test
     public void testFindByTicker_ShouldReturnStockByTicker() throws Exception {
         // given
         Stocks stock = mockStocks.get(0);
-        given(stockService.findByTicker("AAPL")).willReturn(stock);
+        String validTicker = "AAPL";
+        given(stockService.findByTicker(validTicker)).willReturn(stock);
 
         // when
-        ResultActions resultActions = mockMvc.perform(get("/stocks/AAPL"));
+        ResultActions resultActions = mockMvc.perform(get("/stocks/" + validTicker));
 
         // then
         resultActions.andExpect(status().isOk())
@@ -98,19 +95,53 @@ public class StockServiceTest {
     }
 
     /**
-     * Test case to verify the behavior when a stock with the specified ticker is not found.
-     *
-     * This test ensures that the findByTicker() method returns a 404 Not Found status
+     * Ensures that the findByTicker() method returns a 404 Not Found status
      * when a stock with the specified ticker is not found.
      */
 
     @Test
     public void testFindByTicker_ShouldReturnStockNotFound() throws Exception {
         // given
-        given(stockService.findByTicker("XYZ")).willReturn(null);
+        String invalidTicker = "XYZ";
+        given(stockService.findByTicker(invalidTicker)).willReturn(null);
 
         // when
-        ResultActions resultActions = mockMvc.perform(get("/stocks/XYZ"));
+        ResultActions resultActions = mockMvc.perform(get("/stocks/" + invalidTicker));
+
+        // then
+        resultActions.andExpect(status().isNotFound());
+    }
+
+    /**
+     * Ensures that the findByStockExchange() method correctly retrieves all stock
+     * by the specified stock exchange.
+     */
+    @Test
+    public void testFindByStockExchange_ShouldReturnStocksByStockExchange() throws Exception {
+        // given
+        String validStockExchange = "NASDAQ";
+        given(stockService.findByStockExchange(validStockExchange)).willReturn(mockStocks);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(get("/stocks/stock_exchange/" + validStockExchange));
+
+        // then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$[*].stockExchange").value(hasItems("NASDAQ")));
+    }
+
+    /**
+     * Ensures the findByStockExchange() method returns an empty list
+     * when no stocks are found for the specified stock exchange.
+     */
+    @Test
+    public void testFindByStockExchange_ShouldReturnExchangeNotFound() throws Exception {
+        // given
+        String invalidStockExchange = "";
+        given(stockService.findByStockExchange(invalidStockExchange)).willReturn(null);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(get("/stocks/stock_exchange/" + invalidStockExchange));
 
         // then
         resultActions.andExpect(status().isNotFound());
